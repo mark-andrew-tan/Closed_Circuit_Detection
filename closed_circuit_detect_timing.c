@@ -1,4 +1,6 @@
 /*
+  Code Used:
+
   Blink without Delay
 
   Turns on and off a light emitting diode (LED) connected to a digital pin,
@@ -28,14 +30,19 @@
   https://www.arduino.cc/en/Tutorial/BuiltInExamples/BlinkWithoutDelay
 */
 
-// constants won't change. Used here to set a pin number:
-const int OpenPin = 8;     // the number of the Open pin
-const int ClosePin = 7;     // the number of the Closed pin
+/* GOAL:
+ * activate (blink LED) when a button has been 
+ * pressed for a certain amount of time
+ * 
+ * 
+ */
 
+// constants won't change. Used here to set a pin number:
+const int buttonPin = 8;     // the number of the pushbutton pin
 const int ledPin =  LED_BUILTIN;// the number of the LED pin
 
 // constants won't change:
-const long interval = 500;           // interval at which to blink (milliseconds)
+const long interval = 250;           // interval at which to blink (milliseconds)
 const long LED_on_interval = 2500;
 // Variables will change:
 int ledState = LOW;             // ledState used to set the LED
@@ -47,9 +54,7 @@ unsigned long timer_start_Millis = 0;        // will store last time LED was upd
 unsigned long curr_prev_interval = 0;        // will store last time LED was updated
 
 // variables will change:
-int OpenState = 0;         // variable for reading the open status
-int CloseState = 0;         // variable for reading the close status
-
+int buttonState = 0;         // variable for reading the pushbutton status
 bool start_counting = false;
 
 void setup() {
@@ -57,10 +62,8 @@ void setup() {
   Serial.begin(9600);
   // set the digital pin as output:
   pinMode(ledPin, OUTPUT);
-  // initialize the Open pin as an input:
-  pinMode(OpenPin, INPUT);
-  // initialize the Close pin as an input:
-  pinMode(ClosePin, INPUT);
+  // initialize the pushbutton pin as an input:
+  pinMode(buttonPin, INPUT);
 }
 
 void loop() {
@@ -70,26 +73,19 @@ void loop() {
   // between the current time and last time you blinked the LED is bigger than
   // the interval at which you want to blink the LED.
   unsigned long currentMillis = millis();
-  Serial.print("CURR: ");
-  Serial.println(currentMillis);
-  Serial.print("LED STATE: ");
-  Serial.print(ledState);
+//  Serial.print("CURR: ");
+//  Serial.println(currentMillis);
+//  Serial.print("LED STATE: ");
+//  Serial.print(ledState);
 
-  // read the state of the Open value:
-  OpenState = digitalRead(OpenPin);
-  // read the state of the Close value:
-  CloseState = digitalRead(ClosePin);
-  // --- check if the door is closed ---
+  // read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
+  // --- check if the pushbutton is pressed ---
 
-  if (CloseState == HIGH) {
-    Serial.print(" // CLOSED // ");
-    timer_start_Millis = currentMillis;
-
-  }
   // If it is, do not update timer_start_Millis
   // this is our method of starting timer:
-  if (OpenState == HIGH) {
-    Serial.print(" // PUSHED // ");
+  if (buttonState == LOW) {
+    // Serial.print(" // PUSHED // ");
 
     // If not pushed,
     // keep timer_start_Millis update to prevent blink condition
